@@ -22,7 +22,7 @@
 
 ## Purpose
 
-The briefing pipeline produces a daily morning briefing that combines weather, news, project status, goal tracking, and actionable nudges into a single document. The document is converted to audio (TTS) and delivered across three channels so Jeff can read or listen during his commute.
+The briefing pipeline produces a daily morning briefing that combines weather, news, project status, goal tracking, and actionable nudges into a single document. The document is converted to audio (TTS) and delivered across three channels so the user can read or listen during their commute.
 
 The pipeline is fully autonomous. It runs every morning as a sequence of independent Claude Code scheduled tasks. No external cron, no Docker containers, no separate services -- Claude Code itself is the orchestrator and executor.
 
@@ -102,7 +102,7 @@ The reconciliation engine updates the 4-tier tracking system. This is the most c
 3. **Crawl tier-3 tracking files** -- For projects with both `path` and `tracking_file`, reads BACKLOG.md tables or checkbox lists. Counts items by status (open, in progress, blocked, done) and tracks P1 priority items.
 4. **Parse capabilities** -- Extracts capability tables from `## Capabilities` sections. Counts linked backlog items per capability.
 5. **Autonomous capability promotion** -- Auto-promotes capabilities to "Delivered" when all linked backlog items are complete. Auto-derives the project's current phase from the first "In Progress" capability.
-6. **Extract blocked_by from tickets** -- For blocked items with ticket files, reads `**Blocked by**:` lines and flags Jeff-blocked items.
+6. **Extract blocked_by from tickets** -- For blocked items with ticket files, reads `**Blocked by**:` lines and flags user-blocked items.
 7. **Update last_touched from git** -- Runs `git log -1 --format="%ai"` in each project's repo.
 8. **Write projects.yaml** -- Saves updated health, capabilities summary, phase, and last_touched.
 9. **Generate nudges** -- Writes `data/staging/nudges.json` with typed recommendations (staleness, capability_blocked, capability_near_complete, phase_complete, delegatable, no_next_action, monthly_review, backlog_blocked, high_priority_open).
@@ -365,7 +365,7 @@ Gmail SMTP via App Password. Credentials in `.env` (SMTP_USER, SMTP_PASS, SMTP_T
 ```bash
 bash scripts/send_push.sh "Morning Briefing ready -- [1-line summary]"
 ```
-ntfy.sh push to Jeff's mobile device. Topic in `.env` (NTFY_TOPIC).
+ntfy.sh push to the user's mobile device. Topic in `.env` (NTFY_TOPIC).
 
 ### TTS Audio Generation
 
