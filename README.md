@@ -32,12 +32,12 @@ Each stage is a Claude Code scheduled task that runs independently. The pipeline
 
 1. Copy `config.example.yaml` to `config.yaml` and customize
 2. Replace `{PROJECT_ROOT}`, `{CITY}`, `{STATE}`, etc. in scheduled task prompts
-3. Install [claude-notify](https://github.com/yourusername/claude-notify) for delivery scripts
+3. Install [claude-notify](https://github.com/JAKSecurity/claude-notify) for delivery scripts
 4. Register scheduled tasks with your Claude Code scheduler
 
 ## Dependencies
 
-- [claude-notify](https://github.com/yourusername/claude-notify) — delivery scripts (Discord, email, push, TTS)
+- [claude-notify](https://github.com/JAKSecurity/claude-notify) — delivery scripts (Discord, email, push, TTS)
 - Claude Code scheduled tasks (Anthropic API)
 - WebSearch + WebFetch tools (available in Claude Code)
 
