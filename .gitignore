@@ -1,0 +1,15 @@
+# Personal config
+config.yaml
+
+# Generated output
+data/briefings/
+data/staging/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.swp

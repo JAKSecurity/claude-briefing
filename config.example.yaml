@@ -1,0 +1,30 @@
+# claude-briefing — Configuration
+# Copy to config.yaml and customize for your location/interests.
+
+# Location (for weather forecast)
+location:
+  city: "YourCity"
+  state: "YS"
+  nws_site: "LWX"        # NWS forecast office code
+  lat: "38.8977"          # Latitude
+  lon: "-77.0365"         # Longitude (negative for west)
+
+# News deep-dive schedule (day-of-week: topic)
+weekly_focus:
+  Monday: AI and machine learning
+  Tuesday: Cybersecurity
+  Wednesday: Cloud and infrastructure
+  Thursday: Federal technology
+  Friday: Open source and developer tools
+  Saturday: Science and space
+  Sunday: Long reads and book reviews
+
+# Delivery (which channels to use)
+delivery:
+  discord: true
+  email: true
+  push: true
+  tts: true
+
+# Project root (where data/ lives)
+project_root: "/path/to/your/project"
