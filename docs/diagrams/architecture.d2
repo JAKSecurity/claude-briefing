@@ -1,0 +1,187 @@
+# claude-briefing — morning briefing pipeline architecture.
+# Three parallel gatherers fan into a single assembler that delivers
+# via Discord, email, and push. A watchdog runs 17 minutes later to
+# recover any partial failure.
+
+...@~/.claude/skills/d2-diagram/assets/jak-dark
+
+direction: down
+
+# ─────────────────────────────────────────────
+# External data sources
+# ─────────────────────────────────────────────
+
+sources: External Data Sources {
+  class: panel
+  direction: right
+
+  nws: NWS Forecast\nweather.gov {
+    class: external
+    icon: https://api.iconify.design/tabler/cloud-storm.svg
+  }
+
+  web: Web + Headlines\nWebSearch / WebFetch {
+    class: external
+    icon: https://api.iconify.design/tabler/world-search.svg
+  }
+
+  files: Local Files\nprojects.yaml · TELOS {
+    class: external
+    icon: https://api.iconify.design/tabler/folder-open.svg
+  }
+}
+
+# ─────────────────────────────────────────────
+# Gather phase — 5:50–5:55 AM
+# ─────────────────────────────────────────────
+
+gather: Gather Phase — 5:50–5:55 AM {
+  class: panel
+  direction: right
+
+  weather: gather-weather {
+    class: compute
+    icon: https://api.iconify.design/tabler/cloud.svg
+  }
+
+  news: gather-news {
+    class: compute
+    icon: https://api.iconify.design/tabler/news.svg
+  }
+
+  local: gather-local {
+    class: compute
+    icon: https://api.iconify.design/tabler/home.svg
+  }
+}
+
+# ─────────────────────────────────────────────
+# Staging area — data/staging/
+# ─────────────────────────────────────────────
+
+staging: Staging Area — data/staging/ {
+  class: panel
+  direction: right
+
+  w_md: weather.md {
+    class: data
+    shape: page
+    icon: https://api.iconify.design/tabler/file-text.svg
+  }
+
+  n_md: news.md {
+    class: data
+    shape: page
+    icon: https://api.iconify.design/tabler/file-text.svg
+  }
+
+  l_md: local.md {
+    class: data
+    shape: page
+    icon: https://api.iconify.design/tabler/file-text.svg
+  }
+}
+
+# ─────────────────────────────────────────────
+# Assembly — 6:08 AM
+# ─────────────────────────────────────────────
+
+assemble: assemble-briefing — 6:08 AM {
+  class: agent
+  icon: https://api.iconify.design/tabler/robot.svg
+}
+
+claude: Claude {
+  class: llm
+  icon: https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/anthropic.svg
+}
+
+# ─────────────────────────────────────────────
+# Briefing artifacts — data/briefings/
+# ─────────────────────────────────────────────
+
+artifacts: Briefing Artifacts — data/briefings/ {
+  class: panel
+  direction: right
+
+  briefing_md: YYYY-MM-DD.md {
+    class: data
+    shape: page
+    icon: https://api.iconify.design/tabler/file-text.svg
+  }
+
+  briefing_mp3: YYYY-MM-DD.mp3 {
+    class: data
+    shape: page
+    icon: https://api.iconify.design/tabler/music.svg
+  }
+}
+
+# ─────────────────────────────────────────────
+# Delivery
+# ─────────────────────────────────────────────
+
+delivery: Delivery {
+  class: panel
+  direction: right
+
+  discord: Discord {
+    class: success
+    icon: https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg
+  }
+
+  email: Email {
+    class: success
+    icon: https://api.iconify.design/tabler/mail.svg
+  }
+
+  push: Push {
+    class: success
+    icon: https://api.iconify.design/tabler/bell.svg
+  }
+}
+
+# ─────────────────────────────────────────────
+# Recovery watchdog — 6:25 AM
+# ─────────────────────────────────────────────
+
+watchdog: briefing-watchdog — 6:25 AM {
+  class: auth
+  icon: https://api.iconify.design/tabler/eye.svg
+}
+
+# ─────────────────────────────────────────────
+# Connections
+# ─────────────────────────────────────────────
+
+# External sources to gatherers (1-to-1)
+sources.nws -> gather.weather: fetch forecast
+sources.web -> gather.news: search headlines
+sources.files -> gather.local: read files
+
+# Gatherers write staging files
+gather.weather -> staging.w_md: write
+gather.news -> staging.n_md: write
+gather.local -> staging.l_md: write
+
+# Staging into assembler
+staging.w_md -> assemble: read
+staging.n_md -> assemble: read
+staging.l_md -> assemble: read
+
+# Claude provides reasoning alongside assembly
+assemble <-> claude: reason + compose
+
+# Assembly produces artifacts
+assemble -> artifacts.briefing_md: save markdown
+assemble -> artifacts.briefing_mp3: generate TTS
+
+# Deliver via all channels
+artifacts.briefing_md -> delivery.discord
+artifacts.briefing_md -> delivery.email
+artifacts.briefing_md -> delivery.push
+artifacts.briefing_mp3 -> delivery.discord: attach audio
+
+# Watchdog monitors; re-runs on failure
+artifacts.briefing_md -> watchdog: verify exists + size
+watchdog -> assemble: re-run if missing {style: {stroke-dash: 5}}

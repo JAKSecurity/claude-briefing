@@ -4,14 +4,7 @@ An automated morning briefing pipeline for Claude Code. Gathers weather, news, a
 
 ## Architecture
 
-```
-5:50 AM  ─┬─ gather-weather  ─→ data/staging/weather.md
-           ├─ gather-news     ─→ data/staging/news.md
-5:55 AM  ──── gather-local    ─→ data/staging/local.md
-6:08 AM  ──── assemble-briefing ─→ data/briefings/YYYY-MM-DD.md + .mp3
-                                    └─→ Discord, Email, Push
-6:25 AM  ──── briefing-watchdog (recovery if assembly failed)
-```
+![claude-briefing architecture](docs/diagrams/architecture.svg)
 
 Each stage is a Claude Code scheduled task that runs independently. The pipeline is resilient — each gatherer writes its own staging file, the assembler reads whatever is available, and the watchdog recovers from partial failures.
 
