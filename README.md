@@ -2,6 +2,8 @@
 
 An automated morning briefing pipeline for Claude Code. Gathers weather, news, and project status, then delivers a compiled briefing via Discord, email, push notification, and TTS audio.
 
+> One of four substrates extracted from a personal Claude Code automation system. The [case study](https://jaksecurity.com/projects/ai-assistant/) shows how the pieces compose.
+
 ## Architecture
 
 ![claude-briefing architecture](docs/diagrams/architecture.svg)
